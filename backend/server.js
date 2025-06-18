@@ -57,7 +57,7 @@ async function initDB() {
 async function isChannelLive() {
   try {
     console.log(`[LIVE CHECK] Checking live status for ${CHANNEL_NAME}...`);
-    const curlCommand = `curl -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" -H "Accept: application/json" -H "Accept-Language: en-US,en;q=0.9" "https://kick.com/api/v1/channels/${CHANNEL_NAME}"`;
+    const curlCommand = `curl -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" -H "Accept: application/json, text/plain, */*" -H "Accept-Language: en-US,en;q=0.9" -H "Accept-Encoding: gzip, deflate, br" -H "Connection: keep-alive" -H "Upgrade-Insecure-Requests: 1" -H "Sec-Fetch-Dest: empty" -H "Sec-Fetch-Mode: cors" -H "Sec-Fetch-Site: same-origin" -H "Cache-Control: no-cache" -H "Pragma: no-cache" "https://kick.com/api/v1/channels/${CHANNEL_NAME}"`;
     
     const { stdout, stderr } = await execAsync(curlCommand);
     if (stderr) {
@@ -68,6 +68,13 @@ async function isChannelLive() {
     
     // Debug: Check the top-level keys
     console.log(`[LIVE CHECK] Top-level keys:`, Object.keys(json));
+    
+    // Check if there's an error response
+    if (json.error) {
+      console.log(`[LIVE CHECK] API Error:`, json.error);
+      console.log(`[LIVE CHECK] Reference:`, json.reference);
+      return false;
+    }
     
     // First check if there's a current livestream
     if (json.livestream) {
