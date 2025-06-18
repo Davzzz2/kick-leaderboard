@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kick Leaderboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: black;
+      color: white;
+      text-align: center;
+    }
+    table {
+      width: 80%;
+      margin: 40px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid white;
+      padding: 10px;
+    }
+    th {
+      background: #222;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kick Chat Leaderboard (Last 7 Days)</h1>
+  <table id="leaderboard">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Username</th>
+        <th>Messages</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+<script>
+  async function loadLeaderboard() {
+    const res = await fetch("/leaderboard");
+    const data = await res.json();
+    const tbody = document.querySelector("#leaderboard tbody");
+    tbody.innerHTML = "";
+    data.forEach((entry, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${entry.username}</td>
+        <td>${entry.message_count}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  loadLeaderboard();
+  setInterval(loadLeaderboard, 10000);
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "sqlite": "^4.1.1",
+    "sqlite3": "^5.1.7",
+    "node-fetch": "^3.3.2"
+  }
+}
